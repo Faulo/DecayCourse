@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour {
     [SerializeField]
@@ -29,6 +30,9 @@ public class UIManager : MonoBehaviour {
 		{
 			Time.gameObject.SetActive(true);
 			Time.text = System.TimeSpan.FromSeconds((int)Game.GameTime).ToString();
-		}
+            if (Input.GetButton("Jump")) {
+                SceneManager.LoadScene(0);
+            }
+        }
 	}
 }

@@ -53,7 +53,9 @@ public class PlayerController : MonoBehaviour {
 		}
 		transform.Translate(-transform.forward * CurrentSpeed * Time.deltaTime);
 
-		float horizontal = Input.GetAxis("Horizontal") * TurnSpeed * Time.deltaTime;
+        var turnSpeed = TurnSpeed + (-90) * Input.GetAxis("Vertical");
+
+		float horizontal = Input.GetAxis("Horizontal") * turnSpeed * Time.deltaTime;
 		transform.Rotate(0, 0, -horizontal);
 	}
 }
