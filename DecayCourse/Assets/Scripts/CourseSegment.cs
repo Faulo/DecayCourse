@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class CourseSegment : MonoBehaviour {
 
-	public bool active;
-	public bool reachable;
-	public List<CourseSegment> neighbors;
+	public bool Active;
+	public bool Reachable;
+	public List<CourseSegment> Neighbors;
 
 	// Use this for initialization
 	void Start () {
@@ -19,7 +19,7 @@ public class CourseSegment : MonoBehaviour {
 
 	public void DrawLines()
 	{
-		foreach (CourseSegment seg in neighbors)
+		foreach (CourseSegment seg in Neighbors)
 		{
 			Debug.DrawLine(transform.position, seg.transform.position + 0.5f*Vector3.up, Color.red, 1);
 		}
@@ -27,24 +27,25 @@ public class CourseSegment : MonoBehaviour {
 
 	public void DisappearInstant()
 	{
-		active = false;
+		Active = false;
 		gameObject.SetActive(false);
 	}
 
 	public void Disappear()
 	{
-		active = false;
+		Active = false;
 		StartCoroutine(TurnOff());
 	}
 
 	IEnumerator TurnOff()
 	{
-		MeshRenderer rend = GetComponent<MeshRenderer>();
-		for (int i = 0; i < 6; i++)
+		var rend = GetComponent<MeshRenderer>();
+		for (int i = 0; i < 3; i++)
 		{
-			rend.material.color = Color.yellow;
+            var color = rend.material.color;
+            rend.material.color = Color.yellow;
 			yield return new WaitForSeconds(0.25f);
-			rend.material.color = Color.white;
+			rend.material.color = color;
 			yield return new WaitForSeconds(0.25f);
 		}
 		gameObject.SetActive(false);
@@ -52,9 +53,9 @@ public class CourseSegment : MonoBehaviour {
 
 	public void AddNeighbor(CourseSegment seg)
 	{
-		if (seg.active)
+		if (seg.Active)
 		{
-			neighbors.Add(seg);
+			Neighbors.Add(seg);
 		}
 	}
 }

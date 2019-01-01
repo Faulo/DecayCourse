@@ -5,49 +5,55 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour {
 
 	[SerializeField]
-	float baseSpeed;
-	[SerializeField]
-	float turnSpeed;
-	[SerializeField]
-	AnimationCurve breakCurve;
-	[SerializeField]
-	AnimationCurve accelerationCurve;
-	[SerializeField]
-	float breakForce;
-	[SerializeField]
-	float acceleration;
-	[SerializeField]
-	float breakLiningDecaySpeed;
+	float BaseSpeed;
 
-	public static float breakLining;
-	float breakTime;
-	float accelerationTime;
-	float curSpeed;
+	[SerializeField]
+	float TurnSpeed;
+
+    [SerializeField]
+	AnimationCurve BreakCurve;
+
+    [SerializeField]
+	AnimationCurve AccelerationCurve;
+
+    [SerializeField]
+	float BreakForce;
+
+    [SerializeField]
+	float Acceleration;
+
+    [SerializeField]
+	float BreakLiningDecaySpeed;
+
+    public float BreakLining {get; private set;}
+    public float BreakTime { get; private set; }
+    public float AccelerationTime { get; private set; }
+    public float CurrentSpeed { get; private set; }
 
 
-	// Use this for initialization
-	void Start () {
-		breakLining = 100;
+    // Use this for initialization
+    void Start () {
+		BreakLining = 100;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
-		if (Input.GetButton("Jump") && breakLining >=0)
+		if (Input.GetButton("Jump") && BreakLining >=0)
 		{
-			breakLining -= breakLiningDecaySpeed * Time.deltaTime;
-			accelerationTime = 0;
-			breakTime += Time.deltaTime;
-			curSpeed = Mathf.Lerp(curSpeed, baseSpeed * breakCurve.Evaluate(breakTime), Time.deltaTime*breakForce);
+			BreakLining -= BreakLiningDecaySpeed * Time.deltaTime;
+			AccelerationTime = 0;
+			BreakTime += Time.deltaTime;
+			CurrentSpeed = Mathf.Lerp(CurrentSpeed, BaseSpeed * BreakCurve.Evaluate(BreakTime), Time.deltaTime*BreakForce);
 		}else
 		{
-			breakTime = 0;
-			accelerationTime += Time.deltaTime;
-			curSpeed = Mathf.Lerp(curSpeed, baseSpeed * accelerationCurve.Evaluate(accelerationTime), Time.deltaTime * acceleration);
+			BreakTime = 0;
+			AccelerationTime += Time.deltaTime;
+			CurrentSpeed = Mathf.Lerp(CurrentSpeed, BaseSpeed * AccelerationCurve.Evaluate(AccelerationTime), Time.deltaTime * Acceleration);
 		}
-		transform.Translate(-transform.forward * curSpeed * Time.deltaTime);
+		transform.Translate(-transform.forward * CurrentSpeed * Time.deltaTime);
 
-		float horizontal = Input.GetAxis("Horizontal") * turnSpeed * Time.deltaTime;
+		float horizontal = Input.GetAxis("Horizontal") * TurnSpeed * Time.deltaTime;
 		transform.Rotate(0, 0, -horizontal);
 	}
 }

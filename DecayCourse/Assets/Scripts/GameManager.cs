@@ -5,30 +5,21 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
-	public static float gameTime;
-	public static bool gameOver;
+    public float GameTime { get; private set; }
+    public bool GameStarted { get; private set; }
+    public bool GameOver { get; set; }
 
-	float time = 0;
-
-	// Use this for initialization
-	void Start () {
-		time = 0;
-		gameTime = 0;
-		gameOver = false;
-	}
+    // Use this for initialization
+    void Start () {
+		GameTime = 0;
+        GameStarted = false;
+        GameOver = false;
+        GameStarted = true;
+    }
 	
-	// Update is called once per frame
 	void Update () {
-		if (!gameOver)
-		{
-			gameTime += Time.deltaTime;
-		}else
-		{
-			time += Time.deltaTime;
-		}
-		if (time >=3)
-		{
-			SceneManager.LoadScene(0);
-		}
-	}
+        if (GameStarted) {
+            GameTime += Time.deltaTime;
+        }
+    }
 }

@@ -5,23 +5,30 @@ using UnityEngine.UI;
 using TMPro;
 
 public class UIManager : MonoBehaviour {
+    [SerializeField]
+    private Image BreakVal;
+    [SerializeField]
+    private TextMeshProUGUI Time;
 
-	public Image breakVal;
-	public TextMeshProUGUI time;
+    private PlayerController Player;
+    private GameManager Game;
 
 
-	// Use this for initialization
-	void Start () {
-		time.gameObject.SetActive(false);
-	}
+    // Use this for initialization
+    void Start () {
+		Time.gameObject.SetActive(false);
+        Player = FindObjectOfType<PlayerController>();
+        Game = FindObjectOfType<GameManager>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
-		breakVal.fillAmount = PlayerController.breakLining / 100;
-		if (GameManager.gameOver)
+		BreakVal.fillAmount = Player.BreakLining / 100;
+
+		if (Game.GameOver)
 		{
-			time.gameObject.SetActive(true);
-			time.text = System.TimeSpan.FromSeconds((int)GameManager.gameTime).ToString();
+			Time.gameObject.SetActive(true);
+			Time.text = System.TimeSpan.FromSeconds((int)Game.GameTime).ToString();
 		}
 	}
 }

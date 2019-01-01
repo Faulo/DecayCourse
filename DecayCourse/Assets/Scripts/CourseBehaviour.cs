@@ -4,30 +4,30 @@ using UnityEngine;
 
 public class CourseBehaviour : MonoBehaviour {
 
-	public static CourseBehaviour main;
+	public static CourseBehaviour Main;
 
 	[SerializeField]
-	CourseSegment segmentPrefab;
+	CourseSegment SegmentPrefab;
 	[SerializeField]
-	public Vector2Int gridSize;
+	public Vector2Int GridSize;
 	[SerializeField]
-	public int courseWidth;
+	public int CourseWidth;
 
-	public List<CourseSegment> activeSegments = new List<CourseSegment>();
-	public List<CourseSegment> necessarySegments = new List<CourseSegment>();
+	public List<CourseSegment> ActiveSegments = new List<CourseSegment>();
+	public List<CourseSegment> NecessarySegments = new List<CourseSegment>();
 
-	CourseSegment[][] startFinishPairs;
-	public CourseSegment[][] segments;
+	CourseSegment[][] StartFinishPairs;
+	public CourseSegment[][] Segments;
 
 	// Use this for initialization
 	void Start () {
-		gridSize = EvenOut(gridSize);
-		courseWidth = MaxWidth(courseWidth);
-		SetupGrid(gridSize.x, gridSize.y);
-		RemoveHole(courseWidth);
-		SetupConnections(gridSize.x/2, courseWidth);
-		SetupStartFinishPairs(gridSize.x / 2, courseWidth);
-		main = this;
+		GridSize = EvenOut(GridSize);
+		CourseWidth = MaxWidth(CourseWidth);
+		SetupGrid(GridSize.x, GridSize.y);
+		RemoveHole(CourseWidth);
+		SetupConnections(GridSize.x/2, CourseWidth);
+		SetupStartFinishPairs(GridSize.x / 2, CourseWidth);
+		Main = this;
 	}
 	
 	/// <summary>
@@ -37,21 +37,21 @@ public class CourseBehaviour : MonoBehaviour {
 	/// <returns></returns>
 	public bool RemoveSegment(CourseSegment seg)
 	{
-		if (seg.active)
+		if (seg.Active)
 		{
-			seg.active = false;
-			foreach (CourseSegment[] pair in startFinishPairs)
+			seg.Active = false;
+			foreach (CourseSegment[] pair in StartFinishPairs)
 			{
 				if (IsConnected(pair[0], pair[1]))
 				{ 
 					seg.Disappear();
-					activeSegments.Remove(seg);
+					ActiveSegments.Remove(seg);
 					//RemoveUnreachable();
 					return true;
 				}
 			}
-			seg.active = true;
-			necessarySegments.Add(seg);
+			seg.Active = true;
+			NecessarySegments.Add(seg);
 		}
 		return false;
 	}
@@ -61,30 +61,31 @@ public class CourseBehaviour : MonoBehaviour {
 	/// </summary>
 	public void RemoveUnreachable()
 	{
-		foreach(CourseSegment seg in activeSegments)
+		foreach(CourseSegment seg in ActiveSegments)
 		{
-			seg.reachable = false;
+			seg.Reachable = false;
 		}
-		foreach (CourseSegment[] pair in startFinishPairs)
-		{
+		foreach (CourseSegment[] pair in StartFinishPairs)
+		{ 
 			if (IsConnected(pair[0], pair[1]))
 			{
 				List<CourseSegment> checkedSegments = new List<CourseSegment>();
-				List<CourseSegment> exploredSegments = new List<CourseSegment>();
-				exploredSegments.Add(pair[0]);
-				while (exploredSegments.Count > 0)
+                List<CourseSegment> exploredSegments = new List<CourseSegment> {
+                    pair[0]
+                };
+                while (exploredSegments.Count > 0)
 				{
 					CourseSegment[] sx = exploredSegments.ToArray();
 					for (int i = 0; i < sx.Length; i++)
 					{
 						checkedSegments.Add(sx[i]);
-						sx[i].reachable = true;
+						sx[i].Reachable = true;
 						exploredSegments.Remove(sx[i]);
-						for (int j = 0; j < sx[i].neighbors.Count; j++)
+						for (int j = 0; j < sx[i].Neighbors.Count; j++)
 						{
-							if (sx[i].neighbors[j].active && !checkedSegments.Contains(sx[i].neighbors[j]) && !exploredSegments.Contains(sx[i].neighbors[j]))
+							if (sx[i].Neighbors[j].Active && !checkedSegments.Contains(sx[i].Neighbors[j]) && !exploredSegments.Contains(sx[i].Neighbors[j]))
 							{
-								exploredSegments.Add(sx[i].neighbors[j]);
+								exploredSegments.Add(sx[i].Neighbors[j]);
 							}
 						}
 					}
@@ -92,14 +93,14 @@ public class CourseBehaviour : MonoBehaviour {
 				break;
 			}
 		}
-		CourseSegment[] sa = activeSegments.ToArray();
+		CourseSegment[] sa = ActiveSegments.ToArray();
 		for(int i = 0; i < sa.Length; i++)
 		{
-			if (!sa[i].reachable)
+			if (!sa[i].Reachable)
 			{
-				sa[i].active = false;
+				sa[i].Active = false;
 				sa[i].Disappear();
-				activeSegments.Remove(sa[i]);
+				ActiveSegments.Remove(sa[i]);
 			}else
 			{
 				sa[i].DrawLines();
@@ -115,18 +116,18 @@ public class CourseBehaviour : MonoBehaviour {
 	void SetupGrid(int sizeX, int sizeZ)
 	{
 		//Setups the base Grid
-		segments = new CourseSegment[sizeX][];
+		Segments = new CourseSegment[sizeX][];
 		for (int x = 0; x<sizeX; x++)
 		{
-			segments[x] = new CourseSegment[sizeZ];
+			Segments[x] = new CourseSegment[sizeZ];
 			for(int z = 0; z<sizeZ; z++)
 			{
-				segments[x][z] = Instantiate(segmentPrefab, new Vector3(x, 0, z), Quaternion.identity, transform);
-				segments[x][z].active = true;
-				activeSegments.Add(segments[x][z]);
+				Segments[x][z] = Instantiate(SegmentPrefab, new Vector3(x, 0, z), Quaternion.identity, transform);
+				Segments[x][z].Active = true;
+				ActiveSegments.Add(Segments[x][z]);
 			}
 		}
-		transform.position = new Vector3(-courseWidth / 2, 0, -gridSize.y / 2);
+		transform.position = new Vector3(-CourseWidth / 2, 0, -GridSize.y / 2);
 	}
 
 	/// <summary>
@@ -135,12 +136,12 @@ public class CourseBehaviour : MonoBehaviour {
 	/// <param name="courseWidth"></param>
 	void RemoveHole(int courseWidth)
 	{
-		for (int x = courseWidth; x < segments.Length-courseWidth; x++)
+		for (int x = courseWidth; x < Segments.Length-courseWidth; x++)
 		{
-			for (int z = courseWidth; z < segments[x].Length-courseWidth; z++)
+			for (int z = courseWidth; z < Segments[x].Length-courseWidth; z++)
 			{
-				activeSegments.Remove(segments[x][z]);
-				segments[x][z].DisappearInstant();
+				ActiveSegments.Remove(Segments[x][z]);
+				Segments[x][z].DisappearInstant();
 			}
 		}
 	}
@@ -152,29 +153,29 @@ public class CourseBehaviour : MonoBehaviour {
 	/// <param name="startLineLengthX"></param>
 	void SetupConnections(int startLinePosZ, int startLineLengthX)
 	{
-		for (int x = 0; x < segments.Length; x++)
+		for (int x = 0; x < Segments.Length; x++)
 		{
-			for (int z = 0; z < segments[x].Length; z++)
+			for (int z = 0; z < Segments[x].Length; z++)
 			{
-				if (segments[x][z].active)
+				if (Segments[x][z].Active)
 				{
 					if (x - 1 >= 0)
 					{
-						segments[x][z].AddNeighbor(segments[x - 1][z]);
+						Segments[x][z].AddNeighbor(Segments[x - 1][z]);
 					}
-					if (x + 1 < segments.Length)
+					if (x + 1 < Segments.Length)
 					{
-						segments[x][z].AddNeighbor(segments[x + 1][z]);
+						Segments[x][z].AddNeighbor(Segments[x + 1][z]);
 					}
 					if (z - 1 >= 0 && (z != startLinePosZ || x >= startLineLengthX))
 					{
-						segments[x][z].AddNeighbor(segments[x][z - 1]);
+						Segments[x][z].AddNeighbor(Segments[x][z - 1]);
 					}
-					if (z + 1 < segments[x].Length && (z != startLinePosZ - 1 || x >= startLineLengthX))
+					if (z + 1 < Segments[x].Length && (z != startLinePosZ - 1 || x >= startLineLengthX))
 					{
-						segments[x][z].AddNeighbor(segments[x][z + 1]);
+						Segments[x][z].AddNeighbor(Segments[x][z + 1]);
 					}
-					segments[x][z].DrawLines();
+					Segments[x][z].DrawLines();
 				}
 			}
 		}
@@ -187,10 +188,10 @@ public class CourseBehaviour : MonoBehaviour {
 	/// <param name="startLineLengthX"></param>
 	void SetupStartFinishPairs(int startLinePosZ, int startLineLengthX)
 	{
-		startFinishPairs = new CourseSegment[startLineLengthX][];
+		StartFinishPairs = new CourseSegment[startLineLengthX][];
 		for(int i=0; i<startLineLengthX; i++)
 		{
-			startFinishPairs[i] = new CourseSegment[] {segments[i][startLinePosZ], segments[i][startLinePosZ-1]};
+			StartFinishPairs[i] = new CourseSegment[] {Segments[i][startLinePosZ], Segments[i][startLinePosZ-1]};
 		}
 	}
 
@@ -209,13 +210,13 @@ public class CourseBehaviour : MonoBehaviour {
 
 	int MaxWidth(int input)
 	{
-		if (input >= gridSize.x / 2)
+		if (input >= GridSize.x / 2)
 		{
-			input = gridSize.x / 2 - 1;
+			input = GridSize.x / 2 - 1;
 		}
-		if (input >= gridSize.y / 2)
+		if (input >= GridSize.y / 2)
 		{
-			input = gridSize.y / 2 - 1;
+			input = GridSize.y / 2 - 1;
 		}
 		return input;
 	}
@@ -224,7 +225,7 @@ public class CourseBehaviour : MonoBehaviour {
 	{
 		List<CourseSegment> checkedSegments = new List<CourseSegment>();
 		List<CourseSegment> exploredSegments = new List<CourseSegment>();
-		if (start.active)
+		if (start.Active)
 		{
 			exploredSegments.Add(start);
 		}
@@ -232,17 +233,17 @@ public class CourseBehaviour : MonoBehaviour {
 		{
 			for (int i = 0; i<exploredSegments.Count; i++)
 			{
-				for (int j = 0; j<exploredSegments[i].neighbors.Count; j++)
+				for (int j = 0; j<exploredSegments[i].Neighbors.Count; j++)
 				{
-					if (exploredSegments[i].neighbors[j].active && !checkedSegments.Contains(exploredSegments[i].neighbors[j]) && !exploredSegments.Contains(exploredSegments[i].neighbors[j]))
+					if (exploredSegments[i].Neighbors[j].Active && !checkedSegments.Contains(exploredSegments[i].Neighbors[j]) && !exploredSegments.Contains(exploredSegments[i].Neighbors[j]))
 					{
-						if (ReferenceEquals(exploredSegments[i].neighbors[j], finish))
+						if (ReferenceEquals(exploredSegments[i].Neighbors[j], finish))
 						{
 							return true;
 						}
 						else
 						{
-							exploredSegments.Add(exploredSegments[i].neighbors[j]);
+							exploredSegments.Add(exploredSegments[i].Neighbors[j]);
 						}
 					}
 				}

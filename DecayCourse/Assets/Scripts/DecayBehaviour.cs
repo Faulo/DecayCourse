@@ -5,8 +5,8 @@ using UnityEngine;
 public class DecayBehaviour : MonoBehaviour {
 
 	[SerializeField]
-	float decayCooldown;
-	float time;
+	float DecayCooldown;
+	float Time;
 	
 	// Use this for initialization
 	void Start () {
@@ -15,17 +15,17 @@ public class DecayBehaviour : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		time += Time.deltaTime;
-		if (time >= decayCooldown)
+        Time += UnityEngine.Time.deltaTime;
+		if (Time >= DecayCooldown)
 		{
-			time = 0;
+			Time = 0;
 			RemoveRandomSegment();
 		}
 	}
 
 	public void RemoveAll()
 	{
-		while (CourseBehaviour.main.necessarySegments.Count < CourseBehaviour.main.activeSegments.Count)
+		while (CourseBehaviour.Main.NecessarySegments.Count < CourseBehaviour.Main.ActiveSegments.Count)
 		{
 			RemoveRandomSegment();
 		}
@@ -33,14 +33,14 @@ public class DecayBehaviour : MonoBehaviour {
 
 	public void RemoveRandomSegment()
 	{
-		if (CourseBehaviour.main.necessarySegments.Count < CourseBehaviour.main.activeSegments.Count)
+		if (CourseBehaviour.Main.NecessarySegments.Count < CourseBehaviour.Main.ActiveSegments.Count)
 		{
-			int r = Random.Range(0, CourseBehaviour.main.activeSegments.Count);
-			while (CourseBehaviour.main.necessarySegments.Contains(CourseBehaviour.main.activeSegments[r]))
+			int r = Random.Range(0, CourseBehaviour.Main.ActiveSegments.Count);
+			while (CourseBehaviour.Main.NecessarySegments.Contains(CourseBehaviour.Main.ActiveSegments[r]))
 			{
-				r = Random.Range(0, CourseBehaviour.main.activeSegments.Count);
+				r = Random.Range(0, CourseBehaviour.Main.ActiveSegments.Count);
 			}
-			if (!CourseBehaviour.main.RemoveSegment(CourseBehaviour.main.activeSegments[r]))
+			if (!CourseBehaviour.Main.RemoveSegment(CourseBehaviour.Main.ActiveSegments[r]))
 			{
 				RemoveRandomSegment();
 			}
