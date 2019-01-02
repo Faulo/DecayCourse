@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour {
     }
 	
 	void Update () {
-        if (GameStarted) {
+        if (GameStarted && !GameOver) {
             GameTime += Time.deltaTime;
         }
     }

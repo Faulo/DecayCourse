@@ -7,9 +7,9 @@ using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour {
     [SerializeField]
-    private Image BreakVal;
-    [SerializeField]
     private TextMeshProUGUI Time;
+    [SerializeField]
+    private TextMeshProUGUI GameOver;
 
     private PlayerController Player;
     private GameManager Game;
@@ -17,19 +17,18 @@ public class UIManager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-		Time.gameObject.SetActive(false);
+        GameOver.gameObject.SetActive(false);
         Player = FindObjectOfType<PlayerController>();
         Game = FindObjectOfType<GameManager>();
     }
 	
 	// Update is called once per frame
 	void Update () {
-		BreakVal.fillAmount = Player.BreakLining / 100;
+        Time.text = System.TimeSpan.FromSeconds((int)Game.GameTime).ToString();
 
-		if (Game.GameOver)
+        if (Game.GameOver)
 		{
-			Time.gameObject.SetActive(true);
-			Time.text = System.TimeSpan.FromSeconds((int)Game.GameTime).ToString();
+            GameOver.gameObject.SetActive(true);
             if (Input.GetButton("Jump")) {
                 SceneManager.LoadScene(0);
             }

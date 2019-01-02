@@ -25,13 +25,17 @@ public class DecayBehaviour : MonoBehaviour {
 
 	public void RemoveAll()
 	{
-		while (CourseBehaviour.Main.NecessarySegments.Count < CourseBehaviour.Main.ActiveSegments.Count)
-		{
-			RemoveRandomSegment();
-		}
+        StartCoroutine(RemoveAllRoutine());
 	}
+    private IEnumerator RemoveAllRoutine() {
+        while (CourseBehaviour.Main.NecessarySegments.Count < CourseBehaviour.Main.ActiveSegments.Count) {
+            yield return new WaitForFixedUpdate();
+            RemoveRandomSegment();
+        }
+    }
 
-	public void RemoveRandomSegment()
+
+    public void RemoveRandomSegment()
 	{
 		if (CourseBehaviour.Main.NecessarySegments.Count < CourseBehaviour.Main.ActiveSegments.Count)
 		{
