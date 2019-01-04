@@ -24,7 +24,7 @@ public class CourseBehaviour : MonoBehaviour {
 		GridSize = EvenOut(GridSize);
 		CourseWidth = MaxWidth(CourseWidth);
 		SetupGrid(GridSize.x, GridSize.y);
-		RemoveHole(CourseWidth);
+		//RemoveHole(CourseWidth);
 		SetupConnections(GridSize.x/2, CourseWidth);
 		SetupStartFinishPairs(GridSize.x / 2, CourseWidth);
 		Main = this;

@@ -39,16 +39,8 @@ public class CourseSegment : MonoBehaviour {
 
 	IEnumerator TurnOff()
 	{
-		var rend = GetComponent<MeshRenderer>();
-		for (int i = 0; i < 3; i++)
-		{
-            var color = rend.material.color;
-            rend.material.color = Color.yellow;
-			yield return new WaitForSeconds(0.25f);
-			rend.material.color = color;
-			yield return new WaitForSeconds(0.25f);
-		}
-		gameObject.SetActive(false);
+        yield return GetComponent<Animator>().PlayAndWait("Blink");
+        gameObject.SetActive(false);
 	}
 
 	public void AddNeighbor(CourseSegment seg)

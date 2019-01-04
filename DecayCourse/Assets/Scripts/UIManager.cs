@@ -29,9 +29,10 @@ public class UIManager : MonoBehaviour {
         if (Game.GameOver)
 		{
             GameOver.gameObject.SetActive(true);
-            if (Input.GetButton("Jump")) {
-                SceneManager.LoadScene(0);
-            }
         }
-	}
+
+        if (Input.GetButton("Cancel")) {
+            SceneManager.LoadScene(0);
+        }
+    }
 }

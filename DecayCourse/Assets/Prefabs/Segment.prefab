@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 23108764296256384}
   - component: {fileID: 65018219902881468}
   - component: {fileID: 114918864700002366}
+  - component: {fileID: 454996216896240737}
   m_Layer: 0
   m_Name: Segment
   m_TagString: Untagged
@@ -107,3 +108,22 @@ MonoBehaviour:
   Active: 0
   Reachable: 0
   Neighbors: []
+--- !u!95 &454996216896240737
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1992204246598666}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 09a85779095643e44bbf7b4d8e6868cf, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
