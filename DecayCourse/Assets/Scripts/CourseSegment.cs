@@ -3,10 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CourseSegment : MonoBehaviour {
+    Material MeshMaterial {
+        get {
+            return GetComponent<MeshRenderer>().material;
+        }
+    }
 
-	public bool Active;
+    public bool Active;
 	public bool Reachable;
 	public List<CourseSegment> Neighbors;
+
+    private Coroutine BlinkingRoutine;
 
 	// Use this for initialization
 	void Start () {
@@ -31,13 +38,20 @@ public class CourseSegment : MonoBehaviour {
 		gameObject.SetActive(false);
 	}
 
-	public void Disappear()
-	{
-		Active = false;
-		StartCoroutine(TurnOff());
-	}
+    public void ReappearInstant() {
+        if (BlinkingRoutine != null) {
+            StopCoroutine(BlinkingRoutine);
+        }
+        Active = true;
+        gameObject.SetActive(true);
+    }
 
-	IEnumerator TurnOff()
+    public void Disappear() {
+        Active = false;
+        BlinkingRoutine = StartCoroutine(TurnOff());
+    }
+
+    IEnumerator TurnOff()
 	{
         yield return GetComponent<Animator>().PlayAndWait("Blink");
         gameObject.SetActive(false);
@@ -50,4 +64,8 @@ public class CourseSegment : MonoBehaviour {
 			Neighbors.Add(seg);
 		}
 	}
+
+    public void SetColor(Color color) {
+        MeshMaterial.color = color;
+    }
 }

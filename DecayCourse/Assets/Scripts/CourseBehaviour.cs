@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CourseBehaviour : MonoBehaviour {
@@ -10,23 +11,38 @@ public class CourseBehaviour : MonoBehaviour {
 	CourseSegment SegmentPrefab;
 	[SerializeField]
 	public Vector2Int GridSize;
-	[SerializeField]
-	public int CourseWidth;
+    [SerializeField]
+    public int CourseWidth;
 
-	public List<CourseSegment> ActiveSegments = new List<CourseSegment>();
+
+    public List<CourseSegment> ActiveSegments = new List<CourseSegment>();
 	public List<CourseSegment> NecessarySegments = new List<CourseSegment>();
 
 	CourseSegment[][] StartFinishPairs;
-	public CourseSegment[][] Segments;
+	CourseSegment[][] Segments;
 
-	// Use this for initialization
-	void Start () {
+    [SerializeField]
+    public int BalloonCount;
+    [SerializeField]
+    public int SegmentsPerBalloon;
+    [SerializeField]
+    Balloon BalloonPrefab;
+    List<Balloon> Balloons = new List<Balloon>();
+
+    Vector3 TopLeftCorner;
+    Vector3 BottomRightCorner;
+
+    // Use this for initialization
+    void Start () {
 		GridSize = EvenOut(GridSize);
 		CourseWidth = MaxWidth(CourseWidth);
 		SetupGrid(GridSize.x, GridSize.y);
 		//RemoveHole(CourseWidth);
 		SetupConnections(GridSize.x/2, CourseWidth);
 		SetupStartFinishPairs(GridSize.x / 2, CourseWidth);
+        TopLeftCorner = ActiveSegments[0].transform.position;
+        BottomRightCorner = ActiveSegments[ActiveSegments.Count - 1].transform.position;
+        SpawnBalloons(BalloonCount);
 		Main = this;
 	}
 	
@@ -195,7 +211,21 @@ public class CourseBehaviour : MonoBehaviour {
 		}
 	}
 
-	Vector2Int EvenOut(Vector2Int input)
+    void SpawnBalloons(int count) {
+        for (int i = 0; i < count; i++) {
+            SpawnBalloon();
+        }
+    }
+    public void SpawnBalloon() {
+        float x = Random.Range(TopLeftCorner.y, BottomRightCorner.x);
+        float y = 1.5f;
+        float z = Random.Range(TopLeftCorner.z, BottomRightCorner.z);
+
+        Instantiate(BalloonPrefab, new Vector3(x, y, z), Quaternion.identity, transform);
+    }
+
+
+    Vector2Int EvenOut(Vector2Int input)
 	{
 		if(input.x %2 != 0)
 		{
@@ -253,4 +283,15 @@ public class CourseBehaviour : MonoBehaviour {
 		}
 		return false;
 	}
+
+    public void RespawnSegments(Vector3 position, Color color) {
+        Segments.SelectMany(segments => segments)
+            .Where(segment => segment.Active == false)
+            .OrderBy(segment => Vector3.Distance(position, segment.transform.position))
+            .Take(SegmentsPerBalloon)
+            .ForAll((segment) => {
+                segment.SetColor(color);
+                segment.ReappearInstant();
+            });
+    }
 }
