@@ -44,6 +44,7 @@ public class CourseSegment : MonoBehaviour {
         }
         Active = true;
         gameObject.SetActive(true);
+        CourseBehaviour.Main.ActiveSegments.Add(this);
     }
 
     public void Disappear() {

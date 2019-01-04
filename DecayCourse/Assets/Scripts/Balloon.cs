@@ -11,12 +11,14 @@ public class Balloon : MonoBehaviour
     }
 
     private void OnTriggerEnter(Collider other) {
-        CourseBehaviour.Main.RespawnSegments(transform.position, MeshMaterial.color);
-        CourseBehaviour.Main.SpawnBalloon();
-        Destroy(gameObject);
+        if (other.GetComponent<PlayerController>() != null) {
+            CourseBehaviour.Main.RespawnSegments(transform.position, MeshMaterial.color);
+            CourseBehaviour.Main.SpawnBalloon();
+            Destroy(gameObject);
+        }
     }
 
     void Start() {
-        MeshMaterial.color = new Color(Random.Range(0.5f, 1), Random.Range(0.5f, 1), Random.Range(0.5f, 1));
+        MeshMaterial.color = new Color(Random.Range(0.25f, 0.75f), Random.Range(0.25f, 0.75f), Random.Range(0.25f, 0.75f));
     }
 }

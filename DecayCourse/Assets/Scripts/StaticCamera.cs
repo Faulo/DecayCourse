@@ -6,7 +6,7 @@ public class StaticCamera : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		transform.position = new Vector3(CourseBehaviour.Main.GridSize.x/2 - CourseBehaviour.Main.CourseWidth/2, 0, 0);
+		//transform.position = new Vector3(CourseBehaviour.Main.GridSize.x/4, 0, CourseBehaviour.Main.GridSize.y/4);
 		Camera.main.orthographicSize = CourseBehaviour.Main.GridSize.magnitude / 5;
 	}
 	

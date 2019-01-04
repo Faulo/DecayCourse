@@ -35,6 +35,8 @@ public class PlayerController : MonoBehaviour {
 
         StateController.AddTransition<IsAirborneCondition>("Idle", "Airborne");
         StateController.AddTransition<IsGroundedCondition>("Airborne", "Idle");
+
+        transform.position = new Vector3(CourseBehaviour.Main.GridSize.x / 4, 1, CourseBehaviour.Main.GridSize.y / 4);
     }
 	
 	// Update is called once per frame

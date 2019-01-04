@@ -37,7 +37,7 @@ public class DecayBehaviour : MonoBehaviour {
 
     public void RemoveRandomSegment()
 	{
-		if (CourseBehaviour.Main.NecessarySegments.Count < CourseBehaviour.Main.ActiveSegments.Count)
+        if (CourseBehaviour.Main.NecessarySegments.Count < CourseBehaviour.Main.ActiveSegments.Count)
 		{
 			int r = Random.Range(0, CourseBehaviour.Main.ActiveSegments.Count);
 			while (CourseBehaviour.Main.NecessarySegments.Contains(CourseBehaviour.Main.ActiveSegments[r]))

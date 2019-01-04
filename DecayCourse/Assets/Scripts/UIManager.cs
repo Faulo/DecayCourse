@@ -7,9 +7,11 @@ using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour {
     [SerializeField]
-    private TextMeshProUGUI Time;
+    private TextMeshProUGUI Timer;
     [SerializeField]
     private TextMeshProUGUI GameOver;
+    [SerializeField]
+    private TextMeshProUGUI HighScore;
 
     private PlayerController Player;
     private GameManager Game;
@@ -24,11 +26,14 @@ public class UIManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        Time.text = System.TimeSpan.FromSeconds((int)Game.GameTime).ToString();
+        Timer.text = System.TimeSpan.FromSeconds((int)Game.GameTime).ToString();
+        HighScoreData.Update(Game.GameTime, Timer.text);
+        HighScore.text = "High score:\n" + HighScoreData.Text;
 
         if (Game.GameOver)
 		{
             GameOver.gameObject.SetActive(true);
+            Timer.fontSize = 100;
         }
 
         if (Input.GetButton("Cancel")) {

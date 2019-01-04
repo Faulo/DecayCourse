@@ -12,7 +12,7 @@ public class CourseBehaviour : MonoBehaviour {
 	[SerializeField]
 	public Vector2Int GridSize;
     [SerializeField]
-    public int CourseWidth;
+    public int CoursePadding;
 
 
     public List<CourseSegment> ActiveSegments = new List<CourseSegment>();
@@ -24,6 +24,8 @@ public class CourseBehaviour : MonoBehaviour {
     [SerializeField]
     public int BalloonCount;
     [SerializeField]
+    public float BalloonHeight;
+    [SerializeField]
     public int SegmentsPerBalloon;
     [SerializeField]
     Balloon BalloonPrefab;
@@ -34,16 +36,12 @@ public class CourseBehaviour : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-		GridSize = EvenOut(GridSize);
-		CourseWidth = MaxWidth(CourseWidth);
+        Main = this;
+        GridSize = EvenOut(GridSize);
 		SetupGrid(GridSize.x, GridSize.y);
-		//RemoveHole(CourseWidth);
-		SetupConnections(GridSize.x/2, CourseWidth);
-		SetupStartFinishPairs(GridSize.x / 2, CourseWidth);
-        TopLeftCorner = ActiveSegments[0].transform.position;
-        BottomRightCorner = ActiveSegments[ActiveSegments.Count - 1].transform.position;
+        SetupConnections(GridSize.x/2, CoursePadding);
+		SetupStartFinishPairs(GridSize.x / 2, CoursePadding);
         SpawnBalloons(BalloonCount);
-		Main = this;
 	}
 	
 	/// <summary>
@@ -51,23 +49,25 @@ public class CourseBehaviour : MonoBehaviour {
 	/// </summary>
 	/// <param name="seg"></param>
 	/// <returns></returns>
-	public bool RemoveSegment(CourseSegment seg)
-	{
-		if (seg.Active)
-		{
-			seg.Active = false;
-			foreach (CourseSegment[] pair in StartFinishPairs)
-			{
-				if (IsConnected(pair[0], pair[1]))
-				{ 
+	public bool RemoveSegment(CourseSegment seg) {
+        if (seg.Active) {
+            seg.Disappear();
+            ActiveSegments.Remove(seg);
+            return true;
+            /*
+            seg.Active = false;
+			foreach (CourseSegment[] pair in StartFinishPairs) {
+                if (IsConnected(pair[0], pair[1]))
+				{
 					seg.Disappear();
 					ActiveSegments.Remove(seg);
 					//RemoveUnreachable();
 					return true;
-				}
-			}
-			seg.Active = true;
+                }
+            }
+            seg.Active = true;
 			NecessarySegments.Add(seg);
+            //*/
 		}
 		return false;
 	}
@@ -139,35 +139,43 @@ public class CourseBehaviour : MonoBehaviour {
 			for(int z = 0; z<sizeZ; z++)
 			{
 				Segments[x][z] = Instantiate(SegmentPrefab, new Vector3(x, 0, z), Quaternion.identity, transform);
-				Segments[x][z].Active = true;
-				ActiveSegments.Add(Segments[x][z]);
-			}
+                var xOkay = x >= CoursePadding && x < sizeX - CoursePadding;
+                var zOkay = z >= CoursePadding && z < sizeZ - CoursePadding;
+
+                if (xOkay && zOkay) {
+                    Segments[x][z].ReappearInstant();
+                } else {
+                    Segments[x][z].DisappearInstant();
+                }
+                if (x == 0 && z == 0) {
+                    TopLeftCorner = Segments[x][z].transform.position;
+                } else {
+                    BottomRightCorner = Segments[x][z].transform.position;
+                }
+            }
 		}
-		transform.position = new Vector3(-CourseWidth / 2, 0, -GridSize.y / 2);
+		//transform.position = new Vector3(-GridSize.x/2, 0, -GridSize.y/2);
 	}
 
-	/// <summary>
-	/// Removes a hole in the center of the Course depending on the Width
-	/// </summary>
-	/// <param name="courseWidth"></param>
-	void RemoveHole(int courseWidth)
-	{
-		for (int x = courseWidth; x < Segments.Length-courseWidth; x++)
-		{
-			for (int z = courseWidth; z < Segments[x].Length-courseWidth; z++)
-			{
-				ActiveSegments.Remove(Segments[x][z]);
-				Segments[x][z].DisappearInstant();
-			}
-		}
-	}
+    /// <summary>
+    /// Removes a hole in the center of the Course depending on the Width
+    /// </summary>
+    /// <param name="courseWidth"></param>
+    void RemoveCenter(int courseWidth) {
+        for (int x = courseWidth; x < Segments.Length - courseWidth; x++) {
+            for (int z = courseWidth; z < Segments[x].Length - courseWidth; z++) {
+                ActiveSegments.Remove(Segments[x][z]);
+                Segments[x][z].DisappearInstant();
+            }
+        }
+    }
 
-	/// <summary>
-	/// Creates a graph by connecting nearby cubes
-	/// </summary>
-	/// <param name="startLinePosZ"></param>
-	/// <param name="startLineLengthX"></param>
-	void SetupConnections(int startLinePosZ, int startLineLengthX)
+    /// <summary>
+    /// Creates a graph by connecting nearby cubes
+    /// </summary>
+    /// <param name="startLinePosZ"></param>
+    /// <param name="startLineLengthX"></param>
+    void SetupConnections(int startLinePosZ, int startLineLengthX)
 	{
 		for (int x = 0; x < Segments.Length; x++)
 		{
@@ -218,7 +226,7 @@ public class CourseBehaviour : MonoBehaviour {
     }
     public void SpawnBalloon() {
         float x = Random.Range(TopLeftCorner.y, BottomRightCorner.x);
-        float y = 1.5f;
+        float y = BalloonHeight;
         float z = Random.Range(TopLeftCorner.z, BottomRightCorner.z);
 
         Instantiate(BalloonPrefab, new Vector3(x, y, z), Quaternion.identity, transform);
