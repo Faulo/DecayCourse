@@ -292,10 +292,10 @@ public class CourseBehaviour : MonoBehaviour {
 		return false;
 	}
 
-    public void RespawnSegments(Vector3 position, Color color) {
+    public void RespawnSegments(Vector3 position, Color color, int range) {
         Segments.SelectMany(segments => segments)
             .Where(segment => segment.Active == false)
-            .Where(segment => Vector3.Distance(position, segment.transform.position) < BalloonRange)
+            .Where(segment => Vector3.Distance(position, segment.transform.position) < (BalloonRange + range))
             .ForAll((segment) => {
                 segment.SetColor(color);
                 segment.ReappearInstant();
