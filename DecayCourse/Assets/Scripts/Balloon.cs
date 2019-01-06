@@ -33,6 +33,7 @@ public class Balloon : MonoBehaviour {
             player.GetComponent<AudioSource>().PlayOneShot(CollectSound);
             CourseBehaviour.Instance.RespawnSegments(transform.position, MeshMaterial.color, Size);
             CourseBehaviour.Instance.SpawnBalloon();
+            GameManager.Balloons++;
             Destroy(gameObject);
         }
     }

@@ -2,14 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class HighScoreData
-{
+public static class HighScoreData {
     public static float Time = 0;
-    public static string Text = "";
-    public static void Update(float time, string text) {
+    public static string TimeText = "";
+
+    public static int Balloons = 0;
+
+    public static void UpdateTime(float time, string text) {
         if (Time < time) {
             Time = time;
-            Text = text;
+            TimeText = text;
+        }
+    }
+    public static void UpdateBalloons(int balloons) {
+        if (Balloons < balloons) {
+            Balloons = balloons;
         }
     }
 }

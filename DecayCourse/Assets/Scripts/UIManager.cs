@@ -40,9 +40,13 @@ public class UIManager : MonoBehaviour {
         GetComponent<AudioSource>().Play();
     }
     public void UpdateGame() {
-        Timer.text = System.TimeSpan.FromSeconds((int)GameManager.GameTime).ToString();
-        HighScoreData.Update(GameManager.GameTime, Timer.text);
-        HighScore.text = "High score:\n" + HighScoreData.Text;
+        Timer.text = "";
+        Timer.text += System.TimeSpan.FromSeconds((int)GameManager.GameTime).ToString();
+        Timer.text += " Balloons: ";
+        Timer.text += GameManager.Balloons;
+        HighScoreData.UpdateTime(GameManager.GameTime, Timer.text);
+        HighScoreData.UpdateBalloons(GameManager.Balloons);
+        HighScore.text = "High score:\n" + HighScoreData.TimeText;
         if (Player != null) {
             JumpBar.Progress = Player.JumpProgress;
         }

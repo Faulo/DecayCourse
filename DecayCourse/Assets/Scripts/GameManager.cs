@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour {
     }
 
     public static float GameTime { get; private set; }
+    public static int Balloons { get; set; }
 
     private static GameManager Instance {
         get {
@@ -45,13 +46,12 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    private PlayerController Player;
     private UIManager UI;
 
     // Use this for initialization
     void Start() {
         GameTime = 0;
-        Player = FindObjectOfType<PlayerController>();
+        Balloons = 0;
         UI = FindObjectOfType<UIManager>();
 
         UI.HideStartScreen();
@@ -69,11 +69,6 @@ public class GameManager : MonoBehaviour {
             case GameState.Running:
                 UI.UpdateGame();
                 GameTime += Time.deltaTime;
-                if (Player == null) {
-                    TransitionToState(GameState.GameOver);
-                } else {
-                    
-                }
                 break;
             case GameState.GameOver:
                 break;
