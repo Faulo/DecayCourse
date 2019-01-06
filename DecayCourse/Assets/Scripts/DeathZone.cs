@@ -11,7 +11,7 @@ public class DeathZone : MonoBehaviour {
     void Start()
 	{
         Game = FindObjectOfType<GameManager>();
-        transform.localScale = new Vector3(CourseBehaviour.Main.GridSize.x * 5, 0, CourseBehaviour.Main.GridSize.y * 5);
+        //transform.localScale = new Vector3(CourseBehaviour.Main.GridSize.x * 10, 0, CourseBehaviour.Main.GridSize.y * 10);
     }
 
 	private void OnTriggerEnter(Collider other)
