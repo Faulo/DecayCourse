@@ -7,7 +7,8 @@ public class GameManager : MonoBehaviour {
     public enum GameState {
         FirstStart,
         Running,
-        GameOver
+        GameOver,
+        GameWon
     }
     public static GameState State = GameState.FirstStart;
     public static bool Running {
@@ -19,9 +20,30 @@ public class GameManager : MonoBehaviour {
         get {
             return State == GameState.GameOver;
         }
+        set {
+            if (value) {
+                Instance.TransitionToState(GameState.GameOver);
+            }
+        }
+    }
+    public static bool GameWon {
+        get {
+            return State == GameState.GameWon;
+        }
+        set {
+            if (value) {
+                Instance.TransitionToState(GameState.GameWon);
+            }
+        }
     }
 
     public static float GameTime { get; private set; }
+
+    private static GameManager Instance {
+        get {
+            return FindObjectOfType<GameManager>();
+        }
+    }
 
     private PlayerController Player;
     private UIManager UI;
@@ -35,6 +57,7 @@ public class GameManager : MonoBehaviour {
         UI.HideStartScreen();
         UI.HideGame();
         UI.HideGameOver();
+        UI.HideGameWon();
 
         EnterCurrentState();
     }
@@ -45,10 +68,11 @@ public class GameManager : MonoBehaviour {
                 break;
             case GameState.Running:
                 UI.UpdateGame();
+                GameTime += Time.deltaTime;
                 if (Player == null) {
                     TransitionToState(GameState.GameOver);
                 } else {
-                    GameTime += Time.deltaTime;
+                    
                 }
                 break;
             case GameState.GameOver:
@@ -78,6 +102,9 @@ public class GameManager : MonoBehaviour {
             case GameState.GameOver:
                 UI.ShowGameOver();
                 break;
+            case GameState.GameWon:
+                UI.ShowGameWon();
+                break;
         }
     }
     private void ExitCurrentState() {
@@ -90,6 +117,9 @@ public class GameManager : MonoBehaviour {
                 break;
             case GameState.GameOver:
                 UI.HideGameOver();
+                break;
+            case GameState.GameWon:
+                UI.HideGameWon();
                 break;
         }
     }

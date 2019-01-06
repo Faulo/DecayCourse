@@ -13,6 +13,8 @@ public class UIManager : MonoBehaviour {
     [SerializeField]
     private TextMeshProUGUI GameOver;
     [SerializeField]
+    private TextMeshProUGUI GameWon;
+    [SerializeField]
     private TextMeshProUGUI HighScore;
 
     private ProgressBar JumpBar {
@@ -55,6 +57,15 @@ public class UIManager : MonoBehaviour {
     }
     public void HideGameOver() {
         GameOver.gameObject.SetActive(false);
+        Timer.fontSize = 40;
+    }
+
+    public void ShowGameWon() {
+        GameWon.gameObject.SetActive(true);
+        Timer.fontSize = 100;
+    }
+    public void HideGameWon() {
+        GameWon.gameObject.SetActive(false);
         Timer.fontSize = 40;
     }
 }

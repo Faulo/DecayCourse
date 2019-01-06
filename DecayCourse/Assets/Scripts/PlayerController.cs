@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        transform.position = new Vector3(CourseBehaviour.Main.GridSize.x / 4, 1, CourseBehaviour.Main.GridSize.y / 4);
+        //transform.position = new Vector3(CourseBehaviour.Main.GridSize.x / 2, 1, CourseBehaviour.Main.GridSize.y / 2);
     }
 	
 	// Update is called once per frame
@@ -95,5 +95,11 @@ public class PlayerController : MonoBehaviour {
     public void Die() {
         Camera.main.transform.parent = null;
         Destroy(gameObject);
+        GameManager.GameOver = true;
+    }
+    public void Win() {
+        Camera.main.transform.parent = null;
+        Destroy(gameObject);
+        GameManager.GameWon = true;
     }
 }
