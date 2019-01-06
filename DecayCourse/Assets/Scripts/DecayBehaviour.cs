@@ -15,6 +15,10 @@ public class DecayBehaviour : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (!GameManager.Running) {
+            return;
+        }
+
         Time += UnityEngine.Time.deltaTime;
 		if (Time >= DecayCooldown)
 		{

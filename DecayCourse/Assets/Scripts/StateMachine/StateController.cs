@@ -20,7 +20,7 @@ namespace StateMachine {
                     return val;
                 }
             }
-            return default(T);
+            return default;
         }
         public void SetArgument(string key, object val) {
             Args[key] = val;

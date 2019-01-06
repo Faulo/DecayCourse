@@ -1046,8 +1046,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SegmentPrefab: {fileID: 114918864700002366, guid: 6b8b0a49c93a63d40bde8dbee3813163,
     type: 3}
-  GridSize: {x: 20, y: 20}
-  CoursePadding: 2
+  GridSize: {x: 30, y: 30}
+  CoursePadding: 4
   ActiveSegments: []
   NecessarySegments: []
   BalloonCount: 10

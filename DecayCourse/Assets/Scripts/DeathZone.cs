@@ -16,9 +16,10 @@ public class DeathZone : MonoBehaviour {
 
 	private void OnTriggerEnter(Collider other)
 	{
-		Game.GameOver = true;
-		Camera.main.transform.parent = null;
-		Destroy(other.gameObject);
+        var player = other.GetComponent<PlayerController>();
+        if (player != null) {
+            player.Die();
+        }
 	}
 
 }

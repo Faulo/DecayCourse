@@ -9,35 +9,39 @@ public class UIManager : MonoBehaviour {
     [SerializeField]
     private TextMeshProUGUI Timer;
     [SerializeField]
+    private RectTransform StartScreen;
+    [SerializeField]
     private TextMeshProUGUI GameOver;
     [SerializeField]
     private TextMeshProUGUI HighScore;
 
-    private PlayerController Player;
-    private GameManager Game;
-
-
-    // Use this for initialization
-    void Start () {
-        GameOver.gameObject.SetActive(false);
-        Player = FindObjectOfType<PlayerController>();
-        Game = FindObjectOfType<GameManager>();
+    public void ShowStartScreen() {
+        StartScreen.gameObject.SetActive(true);
+        //FindObjectOfType<PlayerController>().gameObject.SetActive(false);
     }
-	
-	// Update is called once per frame
-	void Update () {
-        Timer.text = System.TimeSpan.FromSeconds((int)Game.GameTime).ToString();
-        HighScoreData.Update(Game.GameTime, Timer.text);
+    public void HideStartScreen() {
+        StartScreen.gameObject.SetActive(false);
+        //FindObjectOfType<PlayerController>().gameObject.SetActive(true);
+    }
+
+    public void ShowGame() {
+
+    }
+    public void UpdateGame() {
+        Timer.text = System.TimeSpan.FromSeconds((int)GameManager.GameTime).ToString();
+        HighScoreData.Update(GameManager.GameTime, Timer.text);
         HighScore.text = "High score:\n" + HighScoreData.Text;
+    }
+    public void HideGame() {
 
-        if (Game.GameOver)
-		{
-            GameOver.gameObject.SetActive(true);
-            Timer.fontSize = 100;
-        }
+    }
 
-        if (Input.GetButton("Cancel")) {
-            SceneManager.LoadScene(0);
-        }
+    public void ShowGameOver() {
+        GameOver.gameObject.SetActive(true);
+        Timer.fontSize = 100;
+    }
+    public void HideGameOver() {
+        GameOver.gameObject.SetActive(false);
+        Timer.fontSize = 40;
     }
 }

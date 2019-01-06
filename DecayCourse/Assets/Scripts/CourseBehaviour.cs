@@ -26,7 +26,7 @@ public class CourseBehaviour : MonoBehaviour {
     [SerializeField]
     public float BalloonHeight;
     [SerializeField]
-    public int SegmentsPerBalloon;
+    public float BalloonRange;
     [SerializeField]
     Balloon BalloonPrefab;
     List<Balloon> Balloons = new List<Balloon>();
@@ -295,8 +295,7 @@ public class CourseBehaviour : MonoBehaviour {
     public void RespawnSegments(Vector3 position, Color color) {
         Segments.SelectMany(segments => segments)
             .Where(segment => segment.Active == false)
-            .OrderBy(segment => Vector3.Distance(position, segment.transform.position))
-            .Take(SegmentsPerBalloon)
+            .Where(segment => Vector3.Distance(position, segment.transform.position) < BalloonRange)
             .ForAll((segment) => {
                 segment.SetColor(color);
                 segment.ReappearInstant();

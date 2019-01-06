@@ -41,8 +41,11 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (!GameManager.Running) {
+            return;
+        }
 
-		if (Input.GetButton("Jump") && StateController.InState("Idle"))
+        if (Input.GetButton("Jump") && StateController.InState("Idle"))
 		{
             Vector3 atas = new Vector3(0, 2, 0);
             GetComponent<Rigidbody>().AddForce(atas, ForceMode.Impulse);
@@ -58,4 +61,9 @@ public class PlayerController : MonoBehaviour {
 		float horizontal = Input.GetAxis("Horizontal") * turnSpeed * Time.deltaTime;
 		transform.Rotate(0, 0, -horizontal);
 	}
+
+    public void Die() {
+        Camera.main.transform.parent = null;
+        Destroy(gameObject);
+    }
 }
