@@ -2248,9 +2248,11 @@ MonoBehaviour:
   GridSize: {x: 50, y: 50}
   CoursePadding: 20
   BalloonCount: 10
-  BalloonHeight: 2
-  BalloonRange: 3
-  BalloonMaxDistance: 8
+  BalloonHeight: 1.5
+  BalloonMaxDistance: 7
+  BalloonSegmentMinRange: 3
+  BalloonSegmentMinAmount: 20
+  BalloonSegmentMaxRange: 50
   BalloonPrefab: {fileID: 8294693761045452859, guid: 8b5eeee27f7f2c74dad2bec30d2e2449,
     type: 3}
 --- !u!4 &1228526362
@@ -2421,7 +2423,7 @@ MonoBehaviour:
   JumpStrengthMultiplier: 8
   JumpProgressMultiplier: 2
   BaseSpeed: 4
-  TurnSpeed: 45
+  TurnSpeed: 60
   AccelerationCurve:
     serializedVersion: 2
     m_Curve:

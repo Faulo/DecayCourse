@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEngine;
 
 public class CourseBehaviour : MonoBehaviour {
-
 	public static CourseBehaviour Instance;
 
 	[SerializeField]
@@ -22,12 +21,15 @@ public class CourseBehaviour : MonoBehaviour {
     [SerializeField]
     private float BalloonHeight;
     [SerializeField]
-    private float BalloonRange;
-    [SerializeField]
     private float BalloonMaxDistance;
     [SerializeField]
+    private int BalloonSegmentMinRange;
+    [SerializeField]
+    private int BalloonSegmentMinAmount;
+    [SerializeField]
+    private int BalloonSegmentMaxRange;
+    [SerializeField]
     private Balloon BalloonPrefab;
-    private List<Balloon> Balloons = new List<Balloon>();
 
     Vector3 TopLeftCorner;
     Vector3 BottomRightCorner;
@@ -112,9 +114,23 @@ public class CourseBehaviour : MonoBehaviour {
     }
 
     public void RespawnSegments(Vector3 position, Color color, int range) {
+        int balloonsCreated = 0;
         Grid.SelectMany(segments => segments)
             .Where(segment => segment.Active == false)
-            .Where(segment => Vector3.Distance(position, segment.transform.position) < (BalloonRange + range))
+            .Select(segment => new {
+                Segment = segment,
+                Distance = Vector3.Distance(position, segment.transform.position)
+            })
+            .OrderBy(data => data.Distance)
+            .TakeWhile(data => {
+                balloonsCreated++;
+                if (data.Distance <= (BalloonSegmentMinRange + range) || (balloonsCreated <= (BalloonSegmentMinAmount + range))) {
+                    return true;
+                } else {
+                    return Random.Range(0, BalloonSegmentMaxRange) > data.Distance;
+                }
+            })
+            .Select(data => data.Segment)
             .ForAll((segment) => {
                 segment.SetColor(color);
                 segment.ReappearInstant();
