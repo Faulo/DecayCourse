@@ -83,6 +83,9 @@ public class GameManager : MonoBehaviour {
             TransitionToState(GameState.Running);
             SceneManager.LoadScene(0);
         }
+        if (Input.GetKey(KeyCode.F4)) {
+            Application.Quit();
+        }
     }
 
     private void TransitionToState(GameState newState) {
