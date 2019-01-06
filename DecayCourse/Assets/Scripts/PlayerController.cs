@@ -1,12 +1,26 @@
 ﻿using StateMachine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(StateController))]
 public class PlayerController : MonoBehaviour {
+    enum PlayerState {
+        Grounded,
+        Jumping,
+        Airborne
+    }
+    private PlayerState State = PlayerState.Airborne;
+    [SerializeField]
+    private AnimationCurve JumpStrengthCurve;
+    [SerializeField]
+    private float JumpStrengthMultiplier = 1;
 
-	[SerializeField]
+    public float JumpProgress { get; private set; }
+    [SerializeField]
+    private float JumpProgressMultiplier = 1;
+
+    [SerializeField]
 	float BaseSpeed;
 
 	[SerializeField]
@@ -21,21 +35,9 @@ public class PlayerController : MonoBehaviour {
     public float AccelerationTime { get; private set; }
     public float CurrentSpeed { get; private set; }
 
-    private StateController StateController {
-        get {
-            return GetComponent<StateController>();
-        }
-    }
-
 
     // Use this for initialization
     void Start () {
-        StateController.AddState<DoNothingAction>("Idle");
-        StateController.AddState<DoNothingAction>("Airborne");
-
-        StateController.AddTransition<IsAirborneCondition>("Idle", "Airborne");
-        StateController.AddTransition<IsGroundedCondition>("Airborne", "Idle");
-
         transform.position = new Vector3(CourseBehaviour.Main.GridSize.x / 4, 1, CourseBehaviour.Main.GridSize.y / 4);
     }
 	
@@ -45,10 +47,24 @@ public class PlayerController : MonoBehaviour {
             return;
         }
 
-        if (Input.GetButton("Jump") && StateController.InState("Idle"))
-		{
-            Vector3 atas = new Vector3(0, 2, 0);
-            GetComponent<Rigidbody>().AddForce(atas, ForceMode.Impulse);
+        switch (State) {
+            case PlayerState.Grounded:
+                if (Input.GetButton("Jump")) {
+                    PrepareJump();
+                }
+                break;
+            case PlayerState.Jumping:
+                if (Input.GetButton("Jump")) {
+                    PrepareJump();
+                } else {
+                    Jump();
+                }
+                break;
+            case PlayerState.Airborne:
+                if (Mathf.Approximately(GetComponent<Rigidbody>().velocity.y, 0)) {
+                    Land();
+                }
+                break;
         }
         
 		AccelerationTime += Time.deltaTime;
@@ -61,6 +77,21 @@ public class PlayerController : MonoBehaviour {
 		float horizontal = Input.GetAxis("Horizontal") * turnSpeed * Time.deltaTime;
 		transform.Rotate(0, 0, -horizontal);
 	}
+
+    public void Land() {
+        State = PlayerState.Grounded;
+        JumpProgress = 0;
+    }
+    private void PrepareJump() {
+        State = PlayerState.Jumping;
+        JumpProgress = Mathf.Clamp(JumpProgress + Time.deltaTime * JumpProgressMultiplier, 0, 1);
+    }
+    private void Jump() {
+        State = PlayerState.Airborne;
+        Debug.Log(JumpStrengthCurve.Evaluate(JumpProgress));
+        Vector3 atas = new Vector3(0, JumpStrengthMultiplier * JumpStrengthCurve.Evaluate(JumpProgress), 0);
+        GetComponent<Rigidbody>().AddForce(atas, ForceMode.Impulse);
+    }
 
     public void Die() {
         Camera.main.transform.parent = null;

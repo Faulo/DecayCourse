@@ -15,25 +15,37 @@ public class UIManager : MonoBehaviour {
     [SerializeField]
     private TextMeshProUGUI HighScore;
 
+    private ProgressBar JumpBar {
+        get {
+            return transform.Find("JumpBar").GetComponent<ProgressBar>();
+        }
+    }
+    private PlayerController Player {
+        get {
+            return FindObjectOfType<PlayerController>();
+        }
+    }
+
     public void ShowStartScreen() {
         StartScreen.gameObject.SetActive(true);
-        //FindObjectOfType<PlayerController>().gameObject.SetActive(false);
     }
     public void HideStartScreen() {
         StartScreen.gameObject.SetActive(false);
-        //FindObjectOfType<PlayerController>().gameObject.SetActive(true);
     }
 
     public void ShowGame() {
-
+        JumpBar.gameObject.SetActive(true);
     }
     public void UpdateGame() {
         Timer.text = System.TimeSpan.FromSeconds((int)GameManager.GameTime).ToString();
         HighScoreData.Update(GameManager.GameTime, Timer.text);
         HighScore.text = "High score:\n" + HighScoreData.Text;
+        if (Player != null) {
+            JumpBar.Progress = Player.JumpProgress;
+        }
     }
     public void HideGame() {
-
+        JumpBar.gameObject.SetActive(false);
     }
 
     public void ShowGameOver() {
