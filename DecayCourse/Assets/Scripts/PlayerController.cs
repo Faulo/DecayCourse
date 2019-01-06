@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour {
 		
 		transform.Translate(-transform.forward * CurrentSpeed * Time.deltaTime);
 
-        var turnSpeed = TurnSpeed + (-90) * Input.GetAxis("Vertical");
+        var turnSpeed = TurnSpeed + (-90) * Mathf.Clamp(Input.GetAxis("Vertical"), -1, 0);
 
 		float horizontal = Input.GetAxis("Horizontal") * turnSpeed * Time.deltaTime;
 		transform.Rotate(0, 0, -horizontal);
