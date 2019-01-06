@@ -78,7 +78,7 @@ public class PlayerController : MonoBehaviour {
 		transform.Rotate(0, 0, -horizontal);
 	}
 
-    public void Land() {
+    private void Land() {
         State = PlayerState.Grounded;
         JumpProgress = 0;
     }

@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Balloon : MonoBehaviour {
-    Material MeshMaterial {
+    [SerializeField]
+    private AudioClip CollectSound;
+
+    [SerializeField]
+    private AnimationCurve SizeToScaleCurve;
+
+    private Material MeshMaterial {
         get {
             return GetComponent<MeshRenderer>().material;
         }
     }
-
-    [SerializeField]
-    private AnimationCurve SizeToScaleCurve;
 
     private int Size {
         get {
@@ -27,6 +30,7 @@ public class Balloon : MonoBehaviour {
     private void OnTriggerEnter(Collider other) {
         var player = other.GetComponent<PlayerController>();
         if (player != null) {
+            player.GetComponent<AudioSource>().PlayOneShot(CollectSound);
             CourseBehaviour.Main.RespawnSegments(transform.position, MeshMaterial.color, Size);
             CourseBehaviour.Main.SpawnBalloon();
             Destroy(gameObject);

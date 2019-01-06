@@ -35,6 +35,7 @@ public class UIManager : MonoBehaviour {
 
     public void ShowGame() {
         JumpBar.gameObject.SetActive(true);
+        GetComponent<AudioSource>().Play();
     }
     public void UpdateGame() {
         Timer.text = System.TimeSpan.FromSeconds((int)GameManager.GameTime).ToString();

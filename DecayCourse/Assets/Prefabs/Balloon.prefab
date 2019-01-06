@@ -91,6 +91,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19359a021c02aed44895f1259f603810, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CollectSound: {fileID: 8300000, guid: a22b8c429f521429084d616c68dda19a, type: 3}
   SizeToScaleCurve:
     serializedVersion: 2
     m_Curve:

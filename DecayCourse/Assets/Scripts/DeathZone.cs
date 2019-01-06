@@ -18,6 +18,7 @@ public class DeathZone : MonoBehaviour {
 	{
         var player = other.GetComponent<PlayerController>();
         if (player != null) {
+            GetComponent<AudioSource>().Play();
             player.Die();
         }
 	}
