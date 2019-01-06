@@ -88,7 +88,6 @@ public class PlayerController : MonoBehaviour {
     }
     private void Jump() {
         State = PlayerState.Airborne;
-        Debug.Log(JumpStrengthCurve.Evaluate(JumpProgress));
         Vector3 atas = new Vector3(0, JumpStrengthMultiplier * JumpStrengthCurve.Evaluate(JumpProgress), 0);
         GetComponent<Rigidbody>().AddForce(atas, ForceMode.Impulse);
     }
